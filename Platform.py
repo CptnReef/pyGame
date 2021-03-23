@@ -1,7 +1,7 @@
 import pygame, sys
 
 # background
-bg_objs = [[0.25,[120,10,70,100]],[0.25,[280,30,40,400]],[0.5,[30,40,40,400]],[0.5,[130,90,40,400]], ]
+bg_objs = [[0.25,[120,10,70,400]],[0.25,[280,30,40,400]],[0.5,[30,40,40,400]],[0.5,[130,90,40,400]], ]
 
 # platform variables
 corner0 =  pygame.image.load('images/tiles/surface/corner_dirt0.png')
