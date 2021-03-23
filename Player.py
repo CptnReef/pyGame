@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, os
 
 global animation_frames
 animation_frames = {}
@@ -33,6 +33,8 @@ animation_db['walk'] = load_animation('images/sheets/player/walk',[7,7,40])
 player_action = 'idle'
 player_frame = 0
 player_flip = False
+
+ground_sound_timer =  0
 
 # player variables
 player_rect = pygame.Rect(100,100,5,13)

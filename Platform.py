@@ -1,4 +1,6 @@
-import pygame, sys
+import pygame, sys, os
+
+os.getcwd()
 
 # background
 bg_objs = [[0.25,[120,10,70,400]],[0.25,[280,30,40,400]],[0.5,[30,40,40,400]],[0.5,[130,90,40,400]], ]
@@ -26,3 +28,11 @@ tough_dirt_imageSqr =  pygame.image.load('images/tiles/tough_dirt0.png')
 royal_dirt_imageSqr =  pygame.image.load('images/tiles/royal_dirt0.png')
 old_dirt_imageSqr =  pygame.image.load('images/tiles/old_dirt0.png')
 
+# sound
+jump_sound = pygame.mixer.Sound('sounds/jump.wav')
+jump_sound.set_volume(0.3)
+ground_sounds = pygame.mixer.Sound('sounds/thud.wav')
+ground_sounds.set_volume(0.15)
+
+# pygame.mixer.music.load('sounds/music1.wav')
+# pygame.mixer.music.play(-1)

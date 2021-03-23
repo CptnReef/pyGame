@@ -1,9 +1,13 @@
-import pygame, sys
+import pygame, sys, os
 
 clock = pygame.time.Clock()
 
 from pygame.locals import *
+pygame.mixer.pre_init(44100,-16,2,512)
 pygame.init()
+pygame.mixer.set_num_channels(64)
+
+
 pygame.display.set_caption('Snack-A-Sauras!')
 
 WINDOW_SIZE = (600,400)
@@ -16,6 +20,9 @@ from Platform import *
 
 while True: # game loop
     display.fill((146,244,255))
+
+    if ground_sound_timer > 0:
+        ground_sound_timer -= 1
 
     # camera
     true_scroll[0] += (player_rect.x-true_scroll[0]-152)/20
@@ -87,6 +94,10 @@ while True: # game loop
     if collisions['bottom'] == True:
         vertical_momentum = 0
         air_timer = 0
+        if player_movement[0] != 0:
+            if ground_sound_timer == 0:
+                ground_sound_timer = 30
+                ground_sounds.play()
     else:
         air_timer += 1
     
@@ -105,12 +116,15 @@ while True: # game loop
             pygame.quit() # end game
             sys.exit() # end script
         if event.type == KEYDOWN: # Key Input
+            if event.key == K_w:
+                pygame.mixer.music.fadeout(1000)             
             if event.key == K_RIGHT:
                 move_right = True
             if event.key == K_LEFT:
                 move_left = True
             if event.key == K_UP:
                 if air_timer < 6:
+                    jump_sound.play()
                     vertical_momentum = -5
         if event.type == KEYUP: # Key Input
             if event.key == K_RIGHT:
