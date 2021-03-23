@@ -4,7 +4,7 @@ clock = pygame.time.Clock()
 
 from pygame.locals import *
 pygame.init()
-pygame.display.set_caption('Snack Attack!')
+pygame.display.set_caption('Snack-A-Sauras!')
 
 WINDOW_SIZE = (600,400)
 screen = pygame.display.set_mode(WINDOW_SIZE,0,32) # game window
@@ -73,15 +73,29 @@ while True: # game loop
     vertical_momentum += 0.2
     if vertical_momentum > 3:
         vertical_momentum = 3
-        
+
+    if player_movement[0] > 0:
+        player_action,player_frame = change_action(player_action,player_frame,'walk')
+        player_flip = False
+    if player_movement[0] < 0:
+        player_action,player_frame = change_action(player_action,player_frame,'walk')
+        player_flip = True
+    if player_movement[0] == 0:
+        player_action,player_frame = change_action(player_action,player_frame,'idle')
+
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
     if collisions['bottom'] == True:
         vertical_momentum = 0
         air_timer = 0
     else:
         air_timer += 1
-
-    display.blit(player_image, (player_rect.x-scroll[0],player_rect.y-scroll[1]))
+    
+    player_frame += 1
+    if player_frame >= len(animation_db[player_action]):
+        player_frame = 0
+    player_img_id = animation_db[player_action][player_frame]
+    player_image = animation_frames[player_img_id]
+    display.blit(pygame.transform.flip(player_image,player_flip,False),(player_rect.x-scroll[0],player_rect.y-scroll[1]))
 
     ############################################################################################################################ 
     # GAME EVENTS
