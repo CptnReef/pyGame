@@ -3,9 +3,17 @@ import pygame, sys, os
 os.getcwd()
 
 # background
-bg_objs = [[0.25,[120,10,70,400]],[0.25,[280,30,40,400]],[0.5,[30,40,40,400]],[0.5,[130,90,40,400]], ]
+bg_objs = [[0.25,[120,10,70,400]],[0.25,[280,30,40,400]],[0.5,[30,40,40,400]],[0.5,[130,90,40,400]], [0.5,[150,90,400,400]],]
 
 # platform variables
+bird = pygame.image.load('images/gifs/bird.png')
+diamond = pygame.image.load('images/gifs/diamond.gif').convert()
+duck = pygame.image.load('images/gifs/duck.gif').convert()
+
+# platform variables
+diamond.set_colorkey((255,255,255))
+duck.set_colorkey((255,255,255))
+
 corner0 =  pygame.image.load('images/tiles/surface/corner_dirt0.png')
 corner1 =  pygame.image.load('images/tiles/surface/corner_dirt1.png')
 corner2 =  pygame.image.load('images/tiles/surface/corner_dirt2.png')
@@ -22,11 +30,18 @@ dirt_imageTopR =  pygame.image.load('images/tiles/surface/dirt2.png')
 dirt_imageBotL =  pygame.image.load('images/tiles/surface/dirt3.png')
 dirt_imageBotR =  pygame.image.load('images/tiles/surface/dirt4.png')
 dirt_imageSqr =  pygame.image.load('images/tiles/surface/dirt5.png')
+
 bold_dirt_imageSqr =  pygame.image.load('images/tiles/bold_dirt0.png')
 sharp_dirt_imageSqr =  pygame.image.load('images/tiles/sharp_dirt0.png')
 tough_dirt_imageSqr =  pygame.image.load('images/tiles/tough_dirt0.png')
 royal_dirt_imageSqr =  pygame.image.load('images/tiles/royal_dirt0.png')
 old_dirt_imageSqr =  pygame.image.load('images/tiles/old_dirt0.png')
+
+# tile lib
+tile_index =  { 1 : surface_top,
+                2 : dirt_imageRoot,
+                3 : bird,
+                }
 
 # sound
 jump_sound = pygame.mixer.Sound('sounds/jump.wav')

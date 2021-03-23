@@ -1,5 +1,4 @@
-import pygame, sys, os
-
+import pygame, sys, random, os
 clock = pygame.time.Clock()
 
 from pygame.locals import *
@@ -14,9 +13,47 @@ WINDOW_SIZE = (600,400)
 screen = pygame.display.set_mode(WINDOW_SIZE,0,32) # game window
 display = pygame.Surface((300, 200))
 
+# WHITE = (255, 255, 255)
+# BLACK = (0, 0, 0)
+# RED = (255, 0, 0)
+# GREEN = (0, 255, 0)
+# BLUE = (0, 0, 255)
+# all_sprites = pygame.sprite.Group()
+
 from Stages import *
 from Player import *
 from Platform import *
+
+
+class Enemy:
+    def __init__(self, x, y, direction):
+        self.x = x
+        self.y = y
+        self.direction = direction
+        self.stepIndex = 0
+
+    def step(self):
+        if self.stepIndex >= 33:
+            self.stepIndex = 0
+
+    def draw(self, enm):
+        self.step()
+        if self.direction == 'images/sheets/player/run/18.png':
+            enm.blit(left_enemy[self.stepIndex//3], (self.x, self.y))
+        if self.direction == right:
+            enm.blit(right_enemy[self.stepIndex // 3], (self.x, self.y))
+        self.stepIndex += 1
+
+    def move(self):
+        if self.direction == 'images/sheets/player/run/18.png':
+            self.x -= 3
+        if self.direction == right:
+            self.x += 3
+
+    def off_screen(self):
+        return not(self.x >= -50 and self.x <= enm_width + 50)
+    
+
 
 while True: # game loop
     display.fill((146,244,255))
@@ -36,35 +73,49 @@ while True: # game loop
     for bg_obj in bg_objs:
         obj_rect = pygame.Rect(bg_obj[1][0]-scroll[0]*bg_obj[0],bg_obj[1][1]-scroll[1]*bg_obj[0],bg_obj[1][2],bg_obj[1][3])
         if bg_obj[0] == 0.5:
-            pygame.draw.rect(display, (14,222,150), obj_rect)
+            pygame.draw.rect(display,(20,170,150),obj_rect)
         else:
-            pygame.draw.rect(display, (9,91,85), obj_rect)
+            pygame.draw.rect(display,(15,76,73),obj_rect)
     ############################################################################################################################ 
     # LEVEL EVENTS
     ############################################################################################################################
     tile_rects = []
-    y = 0
-    for layer in game_map:
-        x = 0
-        for tile in layer:
-            if tile == '1':
-                display.blit(dirt_imageRoot,(x*16-scroll[0],y*16-scroll[1]))
-            if tile == '2':
-                display.blit(dirt_imageSqr,(x*16-scroll[0],y*16-scroll[1]))
-            if tile == '3':
-                display.blit(surface_top,(x*16-scroll[0],y*16-scroll[1]))
-            if tile == '4':
-                display.blit(dirt_imageTopR,(x*16-scroll[0],y*16-scroll[1]))
-            if tile == '5':
-                display.blit(dirt_imageTopL,(x*16-scroll[0],y*16-scroll[1]))
-            if tile == '6':
-                display.blit(corner1,(x*16-scroll[0],y*16-scroll[1]))
-            if tile == '7':
-                display.blit(corner0,(x*16-scroll[0],y*16-scroll[1]))
-            if tile != '0':
-                tile_rects.append(pygame.Rect(x*16,y*16,16,16))
-            x += 1
-        y += 1
+
+    # tile rendering goes here
+    for y in range(3):
+        for x in range(4):
+            target_x = x - 1 + int(round(scroll[0]/(CHUNK_SIZE*16)))
+            target_y = y - 1 + int(round(scroll[1]/(CHUNK_SIZE*16)))
+            target_chunk = str(target_x) + ';' + str(target_y)
+            if target_chunk not in game_map:
+                game_map[target_chunk] = generate_chunk(target_x,target_y)
+            for tile in game_map[target_chunk]:
+                display.blit(tile_index[tile[1]],(tile[0][0]*16-scroll[0],tile[0][1]*16-scroll[1]))
+                if tile[1] in [1,2]:
+                    tile_rects.append(pygame.Rect(tile[0][0]*16,tile[0][1]*16,16,16))
+
+    # y = 0
+    # for layer in game_map:
+    #     x = 0
+    #     for tile in layer:
+    #         if tile == '1':
+    #             display.blit(dirt_imageRoot,(x*16-scroll[0],y*16-scroll[1]))
+    #         if tile == '2':
+    #             display.blit(dirt_imageSqr,(x*16-scroll[0],y*16-scroll[1]))
+    #         if tile == '3':
+    #             display.blit(surface_top,(x*16-scroll[0],y*16-scroll[1]))
+    #         if tile == '4':
+    #             display.blit(dirt_imageTopR,(x*16-scroll[0],y*16-scroll[1]))
+    #         if tile == '5':
+    #             display.blit(dirt_imageTopL,(x*16-scroll[0],y*16-scroll[1]))
+    #         if tile == '6':
+    #             display.blit(corner1,(x*16-scroll[0],y*16-scroll[1]))
+    #         if tile == '7':
+    #             display.blit(corner0,(x*16-scroll[0],y*16-scroll[1]))
+    #         if tile != '0':
+    #             tile_rects.append(pygame.Rect(x*16,y*16,16,16))
+    #         x += 1
+    #     y += 1
 
             
 
@@ -131,7 +182,7 @@ while True: # game loop
                 move_right = False
             if event.key == K_LEFT:
                 move_left = False
-
+    
     rockslide = pygame.transform.scale(display, WINDOW_SIZE) # Scaling objects with Game Window
     screen.blit(rockslide, (0,0))
     pygame.display.update()
