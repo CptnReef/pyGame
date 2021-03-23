@@ -1,8 +1,13 @@
 import pygame, sys
 
 #player variables
-player_image = pygame.image.load('images/gifs/player.gif')
+player_image = pygame.image.load('images/sheets/player/idle/1.png').convert()
+player_image.set_colorkey((255,255,255))
+player_rect = pygame.Rect(100,100,5,13)
+
 move_right = False
 move_left = False
-playerY_momentum = 0 # gravity
-player_rect = pygame.Rect(player_location[0],player_location[1],player_image.get_width(),player_image.get_height())
+vertical_momentum = 0 # gravity
+air_timer = 0
+
+true_scroll = [0,0]
